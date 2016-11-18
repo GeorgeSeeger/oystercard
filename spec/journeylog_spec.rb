@@ -1,7 +1,8 @@
 require 'journeylog'
+require 'journey'
 
 describe JourneyLog do
-  subject(:journeylog) {described_class.new}
+  subject(:journeylog) {described_class.new(Journey)}
   let(:station) { double :station, :zone => 1 }
   let(:station2) { double :station2, :zone => 1 }
 

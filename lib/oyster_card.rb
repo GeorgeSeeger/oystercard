@@ -10,7 +10,7 @@ attr_reader :balance, :entry_station, :journey_log
   def initialize
     @balance = 0
     @entry_station = nil
-    @journey_log = JourneyLog.new
+    @journey_log = JourneyLog.new(Journey)
   end
 
   def top_up(amount)
