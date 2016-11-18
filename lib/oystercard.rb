@@ -20,6 +20,7 @@ class OysterCard
 
   def touch_in(entry_station)
     raise "Error: Insufficient balance, please top up." if insufficient_funds?
+    deduct(Journey::PENALTY_FARE) if self.journey_log.current_journey.incomplete?
     self.journey_log.start(entry_station)
   end
 

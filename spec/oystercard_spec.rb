@@ -16,34 +16,34 @@ describe OysterCard do
   end
 
   context "journey" do
-    let(:entry_station) {double :entry_station}
-    let(:exit_station) {double :exit_station}
+    let(:entry_station) {double :entry_station, :zone => 1}
+  let(:exit_station) {double :exit_station, :zone => 1 }
 
     describe "#touch_in" do
 
       it "refuses to let you touch in unless the balance is at least £#{OysterCard::MINIMUM_LIMIT}" do
         message = "Error: Insufficient balance, please top up."
-        expect {oystercard.touch_in(:entry_station)}.to raise_error(message)
+        expect {oystercard.touch_in(entry_station)}.to raise_error(message)
       end
     end
 
     it "charges penalty fare if user forgot to touch out" do
       oystercard.top_up(10)
-      oystercard.touch_in(:entry_station)
-      expect{oystercard.touch_in(:entry_station)}.to change{oystercard.balance}.by(-Journey::PENALTY_FARE)
+      oystercard.touch_in(entry_station)
+      expect{oystercard.touch_in(entry_station)}.to change{oystercard.balance}.by(-Journey::PENALTY_FARE)
     end
 
     describe "#touch_out" do
 
       it "deducts a fare on completion of a journey" do
         oystercard.top_up(10)
-        oystercard.touch_in(:entry_station)
-        expect {oystercard.touch_out(:exit_station)}.to change{oystercard.balance}.by(-Journey::MINIMUM_FARE)
+        oystercard.touch_in(entry_station)
+        expect {oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by(-Journey::MINIMUM_FARE)
       end
 
       it "charges penalty fare if user forgot to touch in" do
         oystercard.top_up(10)
-        expect{oystercard.touch_out(:exit_station)}.to change{oystercard.balance}.by(-Journey::PENALTY_FARE)
+        expect{oystercard.touch_out(exit_station)}.to change{oystercard.balance}.by(-Journey::PENALTY_FARE)
       end
     end
   end

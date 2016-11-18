@@ -20,21 +20,26 @@ describe JourneyLog do
     expect(journey_log.current_journey).to be_an_instance_of Journey
   end
 
-  it "should have a finish method" do
-    expect(journey_log).to respond_to(:finish).with(1).argument
+  context "complete journey" do
+
+    before (:each) {
+      journey_log.start(entry_station)
+      journey_log.finish(exit_station)
+    }
+
+    it "finish should add an exit station to the current journey" do
+      expect(journey_log.journeys.last).to be_complete
+    end
+
+    it "should return a list of all previous journeys" do
+      journey_log.start(entry_station)
+      journey_log.finish(exit_station)
+      expect(journey_log.journeys.length).to eq 2
+    end
+
   end
 
-  it "finish should add an exit station to the current journey" do
-    journey_log.start(entry_station)
-    journey_log.finish(exit_station)
-    expect(journey_log.journeys.last).to be_complete
-  end
-
-  it "should return a list of all previous journeys" do
-    journey_log.start(entry_station)
-    journey_log.finish(exit_station)
-    journey_log.start(entry_station)
-    journey_log.finish(exit_station)
-    expect(journey_log.journeys.length).to eq 2
+  it "should not allow modificatons to the journeys array" do
+    expect{journey_log.journeys.push(:test)}.to raise_error(RuntimeError)
   end
 end

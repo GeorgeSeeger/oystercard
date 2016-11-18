@@ -6,17 +6,12 @@ class JourneyLog
   end
 
   def start(entry_station)
-    journey = @journey_class.new
-    journey.register_entry_station(entry_station)
-    @journeys << journey
+    @journeys << start_journey(entry_station)
   end
 
   def current_journey
-    if @journeys.empty? || @journeys.last.complete?
-       @journey_class.new
-    else
-      return @journeys.last
-    end
+    return @journey_class.new if last_incomplete?
+    @journeys.last
   end
 
   def finish(exit_station)
@@ -27,4 +22,17 @@ class JourneyLog
     @journeys.dup.freeze
   end
 
+  private
+
+  def make_journey
+    @journey_class.new
+  end
+
+  def start_journey(entry_station)
+    make_journey.register_entry_station(entry_station)
+  end
+
+  def last_incomplete?
+    @journeys.empty? || @journeys.last.complete?
+  end
 end
